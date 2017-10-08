@@ -121,9 +121,6 @@ update_state()
   DATA_VERSION=${TIMESTAMP_LINE:10}
 };
 
-
-echo >>$DB_DIR/fetch_osc_and_apply.log
-
 mkdir -p $DB_DIR/augmented_diffs/
 DIFF_COUNT=0
 
@@ -134,7 +131,7 @@ START=`cat $DB_DIR/replicate_id`
 
 while [[ true ]]; do
 {
-  echo "`date -u '+%F %T'`: updating from $START" >>$DB_DIR/fetch_osc_and_apply.log
+  echo "updating from $START"
 
   TEMP_SOURCE_DIR=`mktemp -d /tmp/osm-3s_update_XXXXXX`
   TEMP_TARGET_DIR=`mktemp -d /tmp/osm-3s_update_XXXXXX`
@@ -142,13 +139,13 @@ while [[ true ]]; do
 
   if [[ $TARGET -gt $START ]]; then
   {
-    echo "`date -u '+%F %T'`: updating to $TARGET" >>$DB_DIR/fetch_osc_and_apply.log
+    echo "updating to $TARGET"
 
     update_state
     apply_minute_diffs $TEMP_TARGET_DIR
     echo "$TARGET" >$DB_DIR/replicate_id
 
-    echo "`date -u '+%F %T'`: update complete" $TARGET >>$DB_DIR/fetch_osc_and_apply.log
+    echo "update complete" $TARGET
   };
   else
   {
